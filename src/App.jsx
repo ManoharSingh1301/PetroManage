@@ -6,6 +6,7 @@ import { Production } from './pages/Production';
 import { Compliance } from './pages/Compliance';
 import {Analytics} from './pages/Analytics';
 import { Maintanance } from './pages/Maintanance';
+import { StatusView } from './components/maintenance components/StatusView';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="assets" element={<Assets />} />
           <Route path="production" element={<Production />} />
           <Route path="maintanance" element={<Maintanance />} />
+          <Route path="/maintenance/status" element={<StatusView />} />
           <Route path="compliance" element={<Compliance />} />
           <Route path="analytics" element={<Analytics />} />
         </Route>
