@@ -63,8 +63,8 @@ export function Production() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg p-6 mr-5 text-white flex-1">
-          <h2 className="text-3xl font-bold">Production Management</h2>
-          <p className="text-emerald-100 mt-1">Plan and track production operations</p>
+          <h2 className="text-3xl font-bold flex"><TrendingUp size={40} />&nbsp; Production Management</h2>
+          <p className="text-emerald-100 mt-1 pl-14">Plan and track production operations</p>
         </div>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
@@ -128,7 +128,7 @@ export function Production() {
       {/* <AvP/> */}
 
       {showAddForm && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-400 p-6">
+        <div className="bg-slate-100 rounded-lg shadow-sm border border-gray-400 p-6">
           {activeTab === 'plans' ? (
             <PlansForm
               productionPlans={productionPlans}

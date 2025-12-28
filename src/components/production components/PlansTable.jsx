@@ -53,7 +53,7 @@ export const PlansTable = ({ productionPlans, setProductionPlans }) => {
               {/* New Delete Button */}
               <button 
                 onClick={() => handleDelete(plan.id)}
-                className="text-red-600 hover:text-red-900 transition-colors"
+                className="text-red-600 hover:text-red-900 transition-colors cursor-pointer"
               >
                 <Trash2 size={18} />
               </button>

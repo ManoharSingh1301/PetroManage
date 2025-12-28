@@ -5,9 +5,13 @@ import {Assets} from './pages/Assets';
 import { Production } from './pages/Production';
 import { Compliance } from './pages/Compliance';
 import {Analytics} from './pages/Analytics';
-import { Maintanance } from './pages/Maintanance';
+import { Maintenance } from './pages/Maintenance';
 import { StatusView } from './components/maintenance components/StatusView';
 import { Home } from './pages/Home';
+import { Login } from './pages/Login';
+import { Registration } from './pages/Registration';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { Profile } from './pages/Profile';
 
 function App() {
   return (
@@ -19,11 +23,15 @@ function App() {
           <Route path="assets" element={<Assets />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="production" element={<Production />} />
-          <Route path="maintanance" element={<Maintanance />} />
+          <Route path="maintenance" element={<Maintenance />} />
           <Route path="/maintenance/status" element={<StatusView />} />
           <Route path="compliance" element={<Compliance />} />
+          <Route path="profile" element={<Profile />} />
           {/* <Route path="analytics" element={<Analytics />} /> */}
         </Route>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Registration/>}/>
+        <Route path="/forgot" element={<ForgotPassword/>}/>
       </Routes>
     </BrowserRouter>
   );

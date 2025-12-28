@@ -48,7 +48,7 @@ export const RecordTable = ({ RecordPlans, setRecordPlans }) => {
             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               <button
                 onClick={() => handleDelete(record.id)}
-                className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
+                className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors cursor-pointer"
                 title="Delete Record"
               >
                 <Trash2 size={18} />
