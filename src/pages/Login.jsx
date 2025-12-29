@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import  oilimg from "../img/oil-login.png"
+import oilimg from "../img/image.png";
  
  
 function validateEmail(email) {
@@ -64,7 +64,7 @@ export  function Login({
      
         <div className="hidden md:flex md:w-1/2 lg:w-2/5 items-center justify-center pr-6">
           <img
-            // src={oilimg}
+            src={oilimg}
             alt="Oil assets"
             className="w-80 lg:w-[40rem] xl:w-[40rem] h-auto max-w-none"
             aria-hidden="true"

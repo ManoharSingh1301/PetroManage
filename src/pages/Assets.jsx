@@ -58,14 +58,14 @@ import { getAssets, saveAssets } from "../components/asset components/assetStora
   }, [tab, fromHeader]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 py-4">
 
       {/* ================= HEADER ================= */}
       <div className="relative overflow-hidden rounded-xl">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_white,_transparent_60%)]" />
 
-        <div className="relative p-8 text-white">
+        <div className="relative p-6 text-white">
           <div className="flex items-center gap-3">
             <Boxes className="w-9 h-9 text-slate-300" />
             <h1 className="text-3xl font-bold tracking-tight">
