@@ -3,6 +3,7 @@ import { CreateWorkOrderModal } from "../components/maintenance components/Creat
 import { useNavigate } from "react-router-dom";
 import { SummaryCard } from "../components/maintenance components/Summarycard";
 import { FilterBar } from "../components/maintenance components/FilterBar";
+import { Wrench } from "lucide-react";
 import { StatusView } from "../components/maintenance components/StatusView";
 const INITIAL_DATA = [
   { id: "WO-101", assetId: "Pipeline-P12", description: "Pressure inspection", type: "Preventive", priority: "High", date: "2025-09-12", technician: "Ravi Singh", status: "Scheduled" },
@@ -71,10 +72,11 @@ const handleAddWorkOrder = (newOrder) => {
     {/* 1. Header Area with Stylish Gradient Background */}
     <div className="bg-gradient-to-br from-orange-600 via-orange-700 to-orange-900 p-8 rounded-xl shadow-md flex justify-between items-center mb-8">
       <div className="space-y-1">
-        <h1 className="text-3xl font-extrabold text-white tracking-tight">
-          Maintenance Management
+        <h1 className="text-3xl flex font-extrabold text-white tracking-tight">
+          <Wrench size={40}/>
+          &nbsp; Maintenance Management
         </h1>
-        <p className="text-orange-50 font-medium opacity-90">
+        <p className="text-orange-50 font-medium opacity-90 pl-14">
           Schedule and manage maintenance work orders
         </p>
       </div>

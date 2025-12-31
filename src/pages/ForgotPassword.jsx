@@ -1,9 +1,5 @@
 import React, { useState } from "react";
- 
-/**
- 
- */
- 
+
 export function ForgotPassword({
   title = "Forgot password",
   subtitle = "Enter your email to receive reset instructions",
@@ -11,269 +7,210 @@ export function ForgotPassword({
   signupHref = "/register",
   onGoToLogin,
 }) {
-  // Match your login roles
-  const [role, setRole] = useState("manager"); // 'manager' | 'admin'
- 
-  // Stages
+  const [role, setRole] = useState("manager"); 
   const [stage, setStage] = useState("REQUEST"); // REQUEST | VERIFY
-  const [enableOtpFlow] = useState(true); // set to false for single-step flow
- 
-  // Form state
+  const [enableOtpFlow] = useState(true); 
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPw, setNewPw] = useState("");
   const [confirmPw, setConfirmPw] = useState("");
   const [loading, setLoading] = useState(false);
- 
-  // UI message
   const [message, setMessage] = useState({ type: "", text: "" });
- 
-  // Helpers
+
   const showMsg = (type, text) => setMessage({ type, text });
   const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
- 
-  // Demo handlers (no API calls)
+
   const handleRequest = (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
- 
+
     if (!email || !validateEmail(email)) {
       return showMsg("error", "Please enter a valid email address.");
     }
- 
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       if (enableOtpFlow) {
         setStage("VERIFY");
-        showMsg(
-          "success",
-          `We sent a verification code to ${email}. Enter it below to reset your password.`
-        );
+        showMsg("success", `Verification code sent to ${email}.`);
       } else {
-        showMsg(
-          "success",
-          `If an account exists for ${email}, a reset link has been sent.`
-        );
+        showMsg("success", `Reset link sent to ${email}.`);
       }
     }, 800);
   };
- 
+
   const handleVerify = (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
- 
+
     if (!otp || otp.length < 4) {
-      return showMsg("error", "Please enter the 4–6 digit verification code.");
+      return showMsg("error", "Enter the verification code.");
     }
     if (!newPw || newPw.length < 6) {
-      return showMsg("error", "New password must be at least 6 characters.");
+      return showMsg("error", "Password must be at least 6 characters.");
     }
     if (newPw !== confirmPw) {
       return showMsg("error", "Passwords do not match.");
     }
- 
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      showMsg("success", "Password has been reset successfully.");
+      showMsg("success", "Password reset successfully.");
     }, 800);
   };
- 
+
   return (
-    <div className="min-h-screen flex place-items-center bg-blue-100 px-6 md:px-12 py-10 text-slate-200 justify-center">
-      {/* Card (no image column) */}
+    <div className="min-h-screen flex items-center bg-[#F9FAFB] px-6 py-10 text-black justify-center font-sans">
       <div
-        className="w-full max-w-md rounded-2xl border border-slate-700 bg-gradient-to-b from-[#0b1224] to-[#121a32] shadow-2xl shadow-black/40 p-6"
+        className="w-full max-w-md rounded-3xl border border-gray-200 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-8 lg:p-10"
         role="region"
         aria-label="Forgot password form"
       >
         {/* Header */}
-        <div className="mb-3">
-          <div className="text-lg font-bold">{title}</div>
-          <div className="text-sm text-slate-400">{subtitle}</div>
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-black tracking-tight text-black">{title}</h2>
+          <p className="text-gray-500 mt-2 font-medium">{subtitle}</p>
         </div>
- 
-        {/* Role switch (Manager/Admin) */}
-        <div className="mt-3 mb-4">
-          <div className="text-sm text-slate-400 mb-2">Reset for role:</div>
-          <div className="grid grid-cols-2 gap-2">
+
+        {/* Role switch */}
+        <div className="mb-6">
+          <div className="flex bg-gray-100 p-1.5 rounded-2xl">
             <button
               type="button"
               onClick={() => setRole("manager")}
-              className={`rounded-xl px-3 py-2 text-sm font-medium transition border
-                ${
-                  role === "manager"
-                    ? "bg-blue-600 text-white border-blue-500 shadow-md"
-                    : "bg-slate-900/70 text-slate-300 border-slate-700 hover:bg-slate-800/70"
-                }`}
-              aria-pressed={role === "manager"}
+              className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 ${
+                role === "manager" ? "bg-black text-white shadow-md" : "text-gray-500 hover:text-black"
+              }`}
             >
               Manager
             </button>
             <button
               type="button"
               onClick={() => setRole("admin")}
-              className={`rounded-xl px-3 py-2 text-sm font-medium transition border
-                ${
-                  role === "admin"
-                    ? "bg-indigo-600 text-white border-indigo-500 shadow-md"
-                    : "bg-slate-900/70 text-slate-300 border-slate-700 hover:bg-slate-800/70"
-                }`}
-              aria-pressed={role === "admin"}
+              className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 ${
+                role === "admin" ? "bg-black text-white shadow-md" : "text-gray-500 hover:text-black"
+              }`}
             >
               Admin
             </button>
           </div>
         </div>
- 
+
         {/* Status message */}
         {message.text && (
           <div
-            className={
-              message.type === "error"
-                ? "mt-2 rounded-lg border border-red-500/50 bg-red-500/10 text-red-100 px-3 py-2 text-sm"
-                : "mt-2 rounded-lg border border-green-500/50 bg-green-500/10 text-green-100 px-3 py-2 text-sm"
-            }
-            role="alert"
+            className={`mb-6 rounded-xl px-4 py-3 text-sm font-semibold border ${
+              message.type === "error" ? "border-red-200 bg-red-50 text-red-600" : "border-orange-200 bg-orange-50 text-orange-700"
+            }`}
           >
             {message.text}
           </div>
         )}
- 
-        {/* Stage: Request reset link/code */}
+
+        {/* Stage: REQUEST */}
         {stage === "REQUEST" && (
-          <form className="space-y-4 mt-3" onSubmit={handleRequest} noValidate>
-            {/* Email */}
+          <form className="space-y-6" onSubmit={handleRequest} noValidate>
             <div>
-              <label htmlFor="fp-email" className="text-sm text-slate-400 mb-1 block">
-                Email
+              <label htmlFor="fp-email" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+                Email Address
               </label>
-              <div className="relative">
-                <input
-                  id="fp-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="email"
-                  required
-                />
-              </div>
+              <input
+                id="fp-email"
+                type="email"
+                placeholder="name@company.com"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-4 outline-none focus:border-orange-500 focus:bg-white transition-all"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
- 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
-              aria-busy={loading}
-              className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 px-4 py-3 font-bold text-white shadow-md hover:brightness-110 active:translate-y-px transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full rounded-2xl bg-orange-500 px-4 py-4 text-sm font-black text-white shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:bg-orange-600 active:scale-[0.97] transition-all disabled:opacity-50 uppercase tracking-widest"
             >
-              {loading ? "Sending reset email..." : "Send reset email"}
+              {loading ? "Sending..." : "Send Reset Instructions"}
             </button>
           </form>
         )}
- 
-        {/* Stage: Verify + Reset password (OTP flow) */}
+
+        {/* Stage: VERIFY */}
         {stage === "VERIFY" && (
-          <form className="space-y-4 mt-3" onSubmit={handleVerify} noValidate>
-            {/* OTP */}
+          <form className="space-y-5" onSubmit={handleVerify} noValidate>
             <div>
-              <label htmlFor="fp-otp" className="text-sm text-slate-400 mb-1 block">
-                Verification code (OTP)
+              <label htmlFor="fp-otp" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+                OTP Code
               </label>
-              <div className="relative">
-                <input
-                  id="fp-otp"
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="Enter 4–6 digit code"
-                  className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  required
-                  minLength={4}
-                  maxLength={6}
-                />
-              </div>
+              <input
+                id="fp-otp"
+                type="text"
+                placeholder="123456"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all text-center tracking-[10px] font-bold text-xl"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                maxLength={6}
+                required
+              />
             </div>
- 
-            {/* New password */}
             <div>
-              <label htmlFor="fp-new" className="text-sm text-slate-400 mb-1 block">
-                New password
+              <label htmlFor="fp-new" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+                New Password
               </label>
-              <div className="relative">
-                <input
-                  id="fp-new"
-                  type="password"
-                  placeholder="At least 6 characters"
-                  className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
-                  value={newPw}
-                  onChange={(e) => setNewPw(e.target.value)}
-                  required
-                  minLength={6}
-                  autoComplete="new-password"
-                />
-              </div>
+              <input
+                id="fp-new"
+                type="password"
+                placeholder="••••••••"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all"
+                value={newPw}
+                onChange={(e) => setNewPw(e.target.value)}
+                required
+              />
             </div>
- 
-            {/* Confirm password */}
             <div>
-              <label htmlFor="fp-confirm" className="text-sm text-slate-400 mb-1 block">
-                Confirm password
+              <label htmlFor="fp-confirm" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+                Confirm Password
               </label>
-              <div className="relative">
-                <input
-                  id="fp-confirm"
-                  type="password"
-                  placeholder="Re-enter new password"
-                  className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
-                  value={confirmPw}
-                  onChange={(e) => setConfirmPw(e.target.value)}
-                  required
-                  minLength={6}
-                  autoComplete="new-password"
-                />
-              </div>
+              <input
+                id="fp-confirm"
+                type="password"
+                placeholder="••••••••"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all"
+                value={confirmPw}
+                onChange={(e) => setConfirmPw(e.target.value)}
+                required
+              />
             </div>
- 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
-              aria-busy={loading}
-              className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 px-4 py-3 font-bold text-white shadow-md hover:brightness-110 active:translate-y-px transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full rounded-2xl bg-orange-500 px-4 py-4 text-sm font-black text-white shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:bg-orange-600 active:scale-[0.97] transition-all disabled:opacity-50 uppercase tracking-widest"
             >
-              {loading ? "Resetting..." : "Reset password"}
+              {loading ? "Resetting..." : "Update Password"}
             </button>
           </form>
         )}
- 
-        {/* Footer actions */}
-        <div className="mt-4 text-center text-sm text-slate-400">
-          Remembered your password?
-          {onGoToLogin ? (
+
+        {/* Footer Actions */}
+        <div className="mt-8 text-center text-sm font-medium text-gray-500 space-y-3">
+          <div>
+            Remembered your password?
             <button
               type="button"
-              onClick={onGoToLogin}
-              className="ml-1 text-blue-400 hover:underline"
+              onClick={onGoToLogin || (() => window.location.href = loginHref)}
+              className="ml-2 font-black text-black hover:text-orange-600 transition-colors border-b-2 border-black hover:border-orange-600"
             >
-              Go to login
+              Sign in
             </button>
-          ) : (
-            <a href={loginHref} className="ml-1 text-blue-400 hover:underline">
-              Go to login
+          </div>
+          <div>
+            Don’t have an account?
+            <a href={signupHref} className="ml-2 font-black text-black hover:text-orange-600 transition-colors border-b-2 border-black hover:border-orange-600">
+              Create one
             </a>
-          )}
-        </div>
- 
-        <div className="mt-2 text-center text-sm text-slate-400">
-          Don’t have an account?
-          <a href={signupHref} className="ml-1 text-blue-400 hover:underline">
-            Create one
-          </a>
+          </div>
         </div>
       </div>
     </div>

@@ -1,31 +1,30 @@
 import React, { useState } from "react";
 import oilimg from "../img/image.png";
- 
- 
+
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
- 
-export  function Login({
-  onSubmit,              // optional: (email, password, rememberMe, role) => Promise<void> | void
-  onGoToRegister,        // optional: () => void
+
+export function Login({
+  onSubmit,
+  onGoToRegister,
   title = "Welcome back",
   subtitle = "Sign in to your account",
   forgotHref = "/forgot",
-  signupHref = "/register", // route to registration page
+  signupHref = "/register",
 }) {
-  const [role, setRole] = useState("manager"); // "manager" | "admin"
+  const [role, setRole] = useState("manager");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [loading, setLoading] = useState(false);
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
- 
+
     if (!validateEmail(email)) {
       setMessage({ type: "error", text: "Please enter a valid email address." });
       return;
@@ -34,15 +33,15 @@ export  function Login({
       setMessage({ type: "error", text: "Password must be at least 6 characters." });
       return;
     }
- 
+
     setLoading(true);
     try {
       if (typeof onSubmit === "function") {
         await onSubmit(email, password, rememberMe, role);
-        setMessage({ type: "success", text: `Signed in successfully as ${role === "admin" ? "Admin" : "Manager"}!` });
+        setMessage({ type: "success", text: `Signed in successfully!` });
       } else {
         await new Promise((r) => setTimeout(r, 600));
-        setMessage({ type: "success", text: `Signed in successfully as ${role === "admin" ? "Admin" : "Manager"}!` });
+        setMessage({ type: "success", text: `Signed in successfully!` });
       }
     } catch (err) {
       setMessage({
@@ -53,174 +52,165 @@ export  function Login({
       setLoading(false);
     }
   };
- 
+
   return (
-   
- 
- 
-    <div className="min-h-screen flex  place-items-center bg-blue-200 px-20 py-10 text-slate-200 justify-around">
-     
-     
-     
-        <div className="hidden md:flex md:w-1/2 lg:w-2/5 items-center justify-center pr-6">
-          <img
-            src={oilimg}
-            alt="Oil assets"
-            className="w-80 lg:w-[40rem] xl:w-[40rem] h-auto max-w-none"
-            aria-hidden="true"
-          />
-        </div>  
- 
-     
+    <div className="min-h-screen flex items-center bg-[#d6d7d8] px-6 lg:px-20 py-10 text-black justify-center lg:justify-around font-sans overflow-hidden">
+      
+      {/* Floating Animation Styles */}
+      <style>
+        {`
+          @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+          }
+          .animate-float {
+            animation: float 4s ease-in-out infinite;
+          }
+        `}
+      </style>
+
+      {/* Visual Side - Image made LARGER and added FLOAT animation */}
+      <div className="hidden md:flex md:w-1/2 lg:w-3/5 items-center justify-center pr-10">
+        <img
+          src={oilimg}
+          alt="Assets"
+          className="w-full max-w-[45rem] h-auto drop-shadow-[0_35px_35px_rgba(0,0,0,0.15)] animate-float"
+          aria-hidden="true"
+        />
+      </div>
+
+      {/* Login Card */}
       <div
-        className="w-full max-w-md rounded-2xl border border-slate-700 bg-gradient-to-b from-[#0b1224] to-[#121a32] shadow-2xl shadow-black/40 p-6"
+        className="w-full max-w-md rounded-3xl border border-gray-200 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-8 lg:p-10 z-10"
         role="region"
         aria-label="Login form"
       >
-       
         {/* Header */}
-        <div className="mb-3">
-          <div className="text-lg font-bold">{title}</div>
-          <div className="text-sm text-slate-400">{subtitle}</div>
+        <div className="mb-8 text-center lg:text-left">
+          <h2 className="text-4xl font-black tracking-tight text-black">{title}</h2>
+          <p className="text-gray-500 mt-2 font-medium">{subtitle}</p>
         </div>
- 
+
         {/* Role switch */}
-        <div className="mt-3 mb-4">
-          <div className="text-sm text-slate-400 mb-2">Login as:</div>
-          <div className="grid grid-cols-2 gap-2">
+        <div className="mb-8">
+          <div className="flex bg-gray-100 p-1.5 rounded-2xl">
             <button
               type="button"
               onClick={() => setRole("manager")}
-              className={`rounded-xl px-3 py-2 text-sm font-medium transition border
-                ${role === "manager"
-                  ? "bg-blue-600 text-white border-blue-500 shadow-md"
-                  : "bg-slate-900/70 text-slate-300 border-slate-700 hover:bg-slate-800/70"}
-              `}
-              aria-pressed={role === "manager"}
+              className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 ${
+                role === "manager"
+                  ? "bg-black text-white shadow-md"
+                  : "text-gray-500 hover:text-black"
+              }`}
             >
               Manager
             </button>
             <button
               type="button"
               onClick={() => setRole("admin")}
-              className={`rounded-xl px-3 py-2 text-sm font-medium transition border
-                ${role === "admin"
-                  ? "bg-indigo-600 text-white border-indigo-500 shadow-md"
-                  : "bg-slate-900/70 text-slate-300 border-slate-700 hover:bg-slate-800/70"}
-              `}
-              aria-pressed={role === "admin"}
+              className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-300 ${
+                role === "admin"
+                  ? "bg-black text-white shadow-md"
+                  : "text-gray-500 hover:text-black"
+              }`}
             >
               Admin
             </button>
           </div>
         </div>
- 
-        {/* Message */}
+
+        {/* Status Message */}
         {message.text && (
           <div
-            className={
+            className={`mb-6 rounded-xl px-4 py-3 text-sm font-semibold border ${
               message.type === "error"
-                ? "mt-2 rounded-lg border border-red-500/50 bg-red-500/10 text-red-100 px-3 py-2 text-sm"
-                : "mt-2 rounded-lg border border-green-500/50 bg-green-500/10 text-green-100 px-3 py-2 text-sm"
-            }
-            role="alert"
+                ? "border-red-200 bg-red-50 text-red-600"
+                : "border-orange-200 bg-orange-50 text-orange-700"
+            }`}
           >
             {message.text}
           </div>
         )}
- 
-        {/* Form */}
-        <form className="space-y-4 mt-3" onSubmit={handleSubmit} noValidate>
+
+        <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           {/* Email */}
           <div>
-            <label htmlFor="email" className="text-sm text-slate-400 mb-1 block">
-              Email
+            <label htmlFor="email" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+              Email Address
             </label>
-            <div className="relative">
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-                required
-              />
-            </div>
+            <input
+              id="email"
+              type="email"
+              placeholder="name@company.com"
+              className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-4 outline-none focus:border-orange-500 focus:bg-white transition-all"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
- 
+
           {/* Password */}
           <div>
-            <label htmlFor="password" className="text-sm text-slate-400 mb-1 block">
+            <label htmlFor="password" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
               Password
             </label>
             <div className="relative">
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
+                placeholder="••••••••"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-4 outline-none focus:border-orange-500 focus:bg-white transition-all"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
                 required
-                minLength={6}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((s) => !s)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-blue-400 px-2 py-1"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-gray-400 hover:text-orange-600 transition-colors uppercase tracking-wider"
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
           </div>
- 
-          {/* Row */}
-          <div className="flex items-center justify-between mt-1">
-            <label className="inline-flex items-center gap-2 text-sm text-slate-400 select-none">
+
+          {/* Remember & Forgot */}
+          <div className="flex items-center justify-between px-1">
+            <label className="flex items-center gap-3 text-sm text-gray-600 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded border border-slate-600 bg-slate-800 text-blue-600 focus:ring-blue-300/40"
+                className="w-5 h-5 rounded-lg border-2 border-gray-200 text-orange-600 focus:ring-orange-500 transition-all cursor-pointer"
               />
-              <span>Remember me</span>
+              <span className="group-hover:text-black transition-colors font-medium">Keep me signed in</span>
             </label>
-            <a href={forgotHref} className="text-sm text-blue-400 hover:underline">
-              Forgot password?
+            <a href={forgotHref} className="text-sm font-bold text-black hover:text-orange-600 transition-colors">
+              Forgot?
             </a>
           </div>
- 
-          {/* Submit */}
+
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            aria-busy={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 px-4 py-3 font-bold text-white shadow-md hover:brightness-110 active:translate-y-px transition disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full rounded-2xl bg-orange-700 px-4 py-4.5 text-sm font-black text-white shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:bg-orange-600 active:scale-[0.97] transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest"
           >
-            {loading ? `Loging in as ${role}...` : `Log in as ${role}`}
+            {loading ? "Verifying..." : "Sign In Now"}
           </button>
         </form>
- 
-        {/* Footer: go to Registration */}
-        <div className="mt-4 text-center text-sm text-slate-400">
+
+        {/* Footer */}
+        <div className="mt-10 text-center text-sm font-medium text-gray-500">
           Don’t have an account?
-          {onGoToRegister ? (
-            <button
-              type="button"
-              onClick={onGoToRegister}
-              className="ml-1 text-blue-400 hover:underline"
-            >
-              Create one
-            </button>
-          ) : (
-            <a href={signupHref} className="ml-1 text-blue-400 hover:underline">
-              Create one
-            </a>
-          )}
+          <button
+            type="button"
+            onClick={onGoToRegister || (() => window.location.href = signupHref)}
+            className="ml-2 font-black text-black hover:text-orange-600 transition-colors border-b-2 border-black hover:border-orange-600"
+          >
+            Sign up free
+          </button>
         </div>
       </div>
     </div>

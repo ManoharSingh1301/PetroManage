@@ -1,21 +1,16 @@
-// registration.js
 import React, { useState } from "react";
- 
-/**
- * Tailwind-styled Registration component (single file, no backend).
- */
- 
+
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
- 
+
 export function Registration({
-  onSubmit,           // optional: ({ name, email, password, role, acceptTerms }) => Promise<void> | void
-  onGoToLogin,        // optional: () => void
+  onSubmit,           
+  onGoToLogin,        
   title = "Create your account",
   subtitle = "Join us and start your journey",
   loginHref = "/login",
-  enableRole = true,  // toggle role input if you don't need it
+  enableRole = true,  
 }) {
   const [name, setName] = useState("");
   const [role, setRole] = useState("manager");
@@ -23,15 +18,13 @@ export function Registration({
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
- 
   const [message, setMessage] = useState({ type: "", text: "" });
   const [loading, setLoading] = useState(false);
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
- 
-    // Basic validation
+
     if (!name.trim()) {
       setMessage({ type: "error", text: "Please enter your full name." });
       return;
@@ -52,7 +45,7 @@ export function Registration({
       setMessage({ type: "error", text: "You must accept the Terms & Privacy Policy." });
       return;
     }
- 
+
     setLoading(true);
     try {
       if (typeof onSubmit === "function") {
@@ -71,151 +64,160 @@ export function Registration({
       setLoading(false);
     }
   };
- 
+
   return (
-    <div className="min-h-screen grid place-items-center bg-blue-100 px-6 py-10 text-slate-200">
+    // Matching light background
+    <div className="min-h-screen grid place-items-center  bg-[#d6d7d8] px-6 py-10 text-black font-sans">
       <div
-        className="w-full max-w-md rounded-2xl border border-slate-700 bg-gradient-to-b from-[#0b1224] to-[#121a32] shadow-2xl shadow-black/40 p-6"
+        className="w-full max-w-lg rounded-3xl border border-gray-200 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-8 lg:p-10"
         role="region"
         aria-label="Registration form"
       >
         {/* Header */}
-        <div className="mb-3">
-          <h2 className="text-lg font-bold">{title}</h2>
-          <p className="text-sm text-slate-400">{subtitle}</p>
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-black tracking-tight text-black">{title}</h2>
+          <p className="text-gray-500 mt-2 font-medium">{subtitle}</p>
         </div>
- 
-        {/* Message */}
+
+        {/* Status Message */}
         {message.text && (
           <div
-            className={
+            className={`mb-6 rounded-xl px-4 py-3 text-sm font-semibold border ${
               message.type === "error"
-                ? "mt-2 rounded-lg border border-red-500/50 bg-red-500/10 text-red-100 px-3 py-2 text-sm"
-                : "mt-2 rounded-lg border border-green-500/50 bg-green-500/10 text-green-100 px-3 py-2 text-sm"
-            }
+                ? "border-red-200 bg-red-50 text-red-600"
+                : "border-orange-200 bg-orange-50 text-orange-700"
+            }`}
             role="alert"
           >
             {message.text}
           </div>
         )}
- 
+
         {/* Form */}
-        <form className="space-y-4 mt-3" onSubmit={handleSubmit} noValidate>
+        <form className="space-y-5" onSubmit={handleSubmit} noValidate>
           {/* Name */}
           <div>
-            <label htmlFor="name" className="text-sm text-slate-400 mb-1 block">Full name</label>
+            <label htmlFor="name" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+              Full Name
+            </label>
             <input
               id="name"
               type="text"
-              placeholder="Enter your full name"
-              className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
+              placeholder="John Doe"
+              className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
- 
+
           {/* Email */}
           <div>
-            <label htmlFor="email" className="text-sm text-slate-400 mb-1 block">Email</label>
+            <label htmlFor="email" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-500 mb-2 block ml-1">
+              Email Address
+            </label>
             <input
               id="email"
               type="email"
-              placeholder="you@example.com"
-              className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
+              placeholder="name@company.com"
+              className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-500 px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               required
             />
           </div>
- 
-          {/* Password */}
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Password Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="password" className="text-sm text-slate-400 mb-1 block">Password</label>
+              <label htmlFor="password" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+                Password
+              </label>
               <input
                 id="password"
                 type="password"
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password"
                 required
               />
             </div>
             <div>
-              <label htmlFor="confirm" className="text-sm text-slate-400 mb-1 block">Confirm</label>
+              <label htmlFor="confirm" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+                Confirm
+              </label>
               <input
                 id="confirm"
                 type="password"
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 placeholder:text-slate-500 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black placeholder:text-gray-400 px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
-                autoComplete="new-password"
                 required
               />
             </div>
           </div>
- 
-          {/* Role */}
+
+          {/* Role Selection */}
           {enableRole && (
             <div>
-              <label htmlFor="role" className="text-sm text-slate-400 mb-1 block">Role</label>
+              <label htmlFor="role" className="text-[11px] font-black uppercase tracking-[1.5px] text-gray-400 mb-2 block ml-1">
+                User Role
+              </label>
               <select
                 id="role"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-900/80 text-slate-200 px-3 py-3 outline-none focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition appearance-none"
+                className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 text-black px-5 py-3.5 outline-none focus:border-orange-500 focus:bg-white transition-all appearance-none cursor-pointer"
               >
-                <option value="Manager">Manager</option>
+                <option value="manager">Manager</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
           )}
- 
+
           {/* Terms */}
-          <label className="inline-flex items-start gap-2 text-sm text-slate-400 select-none cursor-pointer">
+          <label className="flex items-start gap-3 text-sm text-gray-600 cursor-pointer group px-1">
             <input
               type="checkbox"
               checked={acceptTerms}
               onChange={(e) => setAcceptTerms(e.target.checked)}
-              className="mt-1 w-4 h-4 rounded border border-slate-600 bg-slate-800 text-blue-600 focus:ring-blue-300/40"
+              className="mt-1 w-5 h-5 rounded-lg border-2 border-gray-200 text-orange-600 focus:ring-orange-500 transition-all cursor-pointer"
               required
             />
-            <span>
+            <span className="group-hover:text-black transition-colors font-medium">
               I agree to the{" "}
-              <a href="/terms" className="text-blue-400 hover:underline">Terms</a>
+              <a href="/terms" className="text-black font-bold hover:text-orange-600 underline decoration-orange-500/30">Terms</a>
               {" "}and{" "}
-              <a href="/privacy" className="text-blue-400 hover:underline">Privacy Policy</a>.
+              <a href="/privacy" className="text-black font-bold hover:text-orange-600 underline decoration-orange-500/30">Privacy Policy</a>.
             </span>
           </label>
- 
+
           {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-500 px-4 py-3 font-bold text-white shadow-md hover:brightness-110 active:translate-y-px transition disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full rounded-2xl bg-orange-700 px-4 py-4 text-sm font-black text-white shadow-[0_10px_20px_rgba(249,115,22,0.3)] hover:bg-orange-600 active:scale-[0.97] transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest"
           >
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
- 
+
         {/* Footer */}
-        <div className="mt-4 text-center text-sm text-slate-400">
+        <div className="mt-8 text-center text-sm font-medium text-gray-500">
           Already have an account?
           {onGoToLogin ? (
             <button
               type="button"
               onClick={onGoToLogin}
-              className="ml-1 text-blue-400 hover:underline"
+              className="ml-2 font-black text-black hover:text-orange-600 transition-colors border-b-2 border-black hover:border-orange-600"
             >
               Sign in
             </button>
           ) : (
-            <a href={loginHref} className="ml-1 text-blue-400 hover:underline">
+            <a href={loginHref} className="ml-2 font-black text-black hover:text-orange-600 transition-colors border-b-2 border-black hover:border-orange-600">
               Sign in
             </a>
           )}
