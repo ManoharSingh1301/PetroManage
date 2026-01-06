@@ -9,23 +9,23 @@ import { FileCheck } from 'lucide-react';
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-
+ 
 // Sub-components
 import Card from "../components/compliance components/Card.jsx";
 import ReportForm from "../components/compliance components/ReportForm.jsx";
 import ReportsTable from "../components/compliance components/ReportsTable.jsx";
-
+ 
 // --- Animation Variants ---
 const containerVar = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
 };
-
+ 
 const itemVar = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1 }
 };
-
+ 
 // --- EXTERNAL COMPONENT: AuditView ---
 const AuditView = ({
   setView, filteredLogs, indexOfFirstLog, indexOfLastLog,
@@ -35,7 +35,7 @@ const AuditView = ({
   setCurrentPage, totalPages, logsPerPage
 }) => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
@@ -48,7 +48,7 @@ const AuditView = ({
         <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
         Back to Dashboard
       </button>
-
+ 
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
         <div>
           <h1 className="text-3xl font-black text-slate-900 flex items-center gap-3">
@@ -58,7 +58,7 @@ const AuditView = ({
             Displaying {filteredLogs.length > 0 ? indexOfFirstLog + 1 : 0} - {Math.min(indexOfLastLog, filteredLogs.length)} of {filteredLogs.length} Activities
           </p>
         </div>
-
+ 
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
           <div className="relative h-12 w-64">
@@ -71,7 +71,7 @@ const AuditView = ({
               className="h-full w-full pl-11 pr-4 bg-white border border-slate-200 rounded-xl text-xs font-bold focus:ring-4 focus:ring-emerald-500/10 outline-none shadow-sm transition-all"
             />
           </div>
-
+ 
           {/* Date Range */}
           <div className="flex items-center bg-white border border-slate-200 rounded-xl px-4 h-12 shadow-sm">
             <input
@@ -88,7 +88,7 @@ const AuditView = ({
               className="text-[10px] font-bold text-slate-700 outline-none cursor-pointer"
             />
           </div>
-
+ 
           {/* Export Dropdown */}
           <div className="relative h-12" ref={dropdownRef}>
             <button
@@ -98,10 +98,10 @@ const AuditView = ({
               Export
               <FaChevronDown className={`transition-transform duration-300 ${showExportDropdown ? "rotate-180" : ""}`} />
             </button>
-
+ 
             <AnimatePresence>
               {showExportDropdown && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -127,7 +127,7 @@ const AuditView = ({
           </div>
         </div>
       </div>
-
+ 
       <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
@@ -153,11 +153,11 @@ const AuditView = ({
                   </tr>
                 ) : (
                   currentLogs.map((log, i) => (
-                    <motion.tr 
+                    <motion.tr
                       layout
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      key={i} 
+                      key={i}
                       className="hover:bg-slate-50/50 transition-colors group"
                     >
                       <td className="px-8 py-5 font-bold text-slate-900 text-xs">{log.ReportID}</td>
@@ -185,7 +185,7 @@ const AuditView = ({
             </tbody>
           </table>
         </div>
-
+ 
         {totalPages > 1 && (
           <div className="px-8 py-5 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
             <span className="text-xs font-black text-slate-400 uppercase tracking-tighter">
@@ -213,7 +213,7 @@ const AuditView = ({
     </motion.div>
   );
 };
-
+ 
 // --- MAIN COMPONENT: Compliance ---
 export const Compliance = () => {
   const [view, setView] = useState("dashboard");
@@ -228,37 +228,37 @@ export const Compliance = () => {
   const logsPerPage = 8;
   const [showExportDropdown, setShowExportDropdown] = useState(false);
   const dropdownRef = useRef(null);
-
+ 
   useEffect(() => {
     const handler = setTimeout(() => setLogSearchTerm(searchInput), 300);
     return () => clearTimeout(handler);
   }, [searchInput]);
-
+ 
   useEffect(() => {
     const savedReports = JSON.parse(localStorage.getItem("complianceReports") || "[]");
     const savedLogs = JSON.parse(localStorage.getItem("auditLogs") || "[]");
     setReports(savedReports);
     setAuditLogs(savedLogs);
-
+ 
     const closeDropdown = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setShowExportDropdown(false);
     };
     window.addEventListener("mousedown", closeDropdown);
     return () => window.removeEventListener("mousedown", closeDropdown);
   }, []);
-
+ 
   const parseLogDate = useCallback((str) => {
     if (!str) return null;
     const [datePart] = str.split(",");
     const [d, m, y] = datePart.split("/");
     return new Date(y, m - 1, d);
   }, []);
-
+ 
   const filteredLogs = useMemo(() => {
     return auditLogs.filter((log) => {
-      const matchesSearch = !logSearchTerm || 
+      const matchesSearch = !logSearchTerm ||
         Object.values(log).some(v => String(v).toLowerCase().includes(logSearchTerm.toLowerCase()));
-
+ 
       let matchesDate = true;
       if (fromDate || endDate) {
         const logDate = parseLogDate(log.Timestamp);
@@ -271,7 +271,7 @@ export const Compliance = () => {
       return matchesSearch && matchesDate;
     });
   }, [auditLogs, logSearchTerm, fromDate, endDate, parseLogDate]);
-
+ 
   const addAuditLog = (reportId, action, oldValue = "-", newValue = "-") => {
     const newLog = {
       ReportID: reportId || "N/A",
@@ -285,12 +285,12 @@ export const Compliance = () => {
     setAuditLogs(updated);
     localStorage.setItem("auditLogs", JSON.stringify(updated));
   };
-
+ 
   const exportData = (type) => {
     const fileName = `AuditLog_${new Date().getTime()}`;
     const headers = ["Report ID", "Action", "User", "Old Value", "New Value", "Timestamp"];
     const rows = filteredLogs.map(l => [l.ReportID, l.Action, l.User, l.OldValue, l.NewValue, l.Timestamp]);
-
+ 
     if (type === "json") {
       const blob = new Blob([JSON.stringify(filteredLogs, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -315,7 +315,7 @@ export const Compliance = () => {
     }
     setShowExportDropdown(false);
   };
-
+ 
   const dynamicStats = useMemo(() => {
     if (!reports.length) return { "Overall Compliance": "0%", "Safety Score": "0", "Pending": "0", "Audits": "0" };
     const compliant = reports.filter(r => r.ComplianceStatus === "Compliant").length;
@@ -327,36 +327,36 @@ export const Compliance = () => {
       "📅 Upcoming Audits": reports.filter(r => r.NextAuditDate && new Date(r.NextAuditDate) >= new Date().setHours(0,0,0,0)).length
     };
   }, [reports]);
-
+ 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-20 overflow-hidden">
       <AnimatePresence mode="wait">
         {view === "dashboard" ? (
-          <motion.div 
+          <motion.div
             key="dash"
             variants={containerVar} initial="hidden" animate="visible" exit={{ opacity: 0, y: -20 }}
           >
             {/* Header */}
-            <div className="w-full pt-6 px-4">
-              <div className="relative overflow-hidden text-white rounded-3xl p-8 sm:p-12 bg-slate-900 shadow-2xl">
+            <div className="w-full pt-4">
+              <div className="relative overflow-hidden text-white rounded-xl sm:rounded-xl px-4 py-3 sm:px-12 sm:py-5.5 bg-slate-900 shadow-2xl">
                 <div className="relative z-10">
-                  <h2 className="text-4xl sm:text-5xl font-black mb-4 tracking-tight flex items-center gap-4">
+                  <h2 className="text-3xl sm:text-4xl md:text-4xl font-black mb-3 tracking-tight flex items-center gap-3">
                     <FileCheck size={50} className="text-emerald-400" />
                     Compliance <span className="text-emerald-400">&amp;</span> Safety
                   </h2>
-                  <p className="text-slate-400 font-bold text-sm sm:text-lg max-w-xl">
+                  <p className="text-slate-400 font-medium text-xs sm:text-base mx-auto pl-14">
                     Centralized regulatory tracking and real-time safety audit management for industrial assets.
                   </p>
                 </div>
                 <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full" />
               </div>
             </div>
-
+ 
             {/* Stats Cards */}
             <motion.div variants={itemVar} className="max-w-7xl mx-auto mt-10 px-4">
               <Card data={dynamicStats} />
             </motion.div>
-
+ 
             {/* Action Button */}
             <motion.div variants={itemVar} className="flex justify-center mt-12 px-4">
               <button
@@ -366,7 +366,7 @@ export const Compliance = () => {
                 <FaPlus /> Generate New Report
               </button>
             </motion.div>
-
+ 
             {/* Table Section */}
             <motion.div variants={itemVar} className="max-w-7xl mx-auto mt-16 px-4">
               <div className="flex items-center justify-between mb-8">
@@ -384,12 +384,12 @@ export const Compliance = () => {
                 <ReportsTable reports={reports} setReports={setReports} onLogAction={addAuditLog} />
               </div>
             </motion.div>
-
+ 
             {/* Modal */}
             <AnimatePresence>
               {showPopup && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/40 backdrop-blur-xl p-4">
-                  <motion.div 
+                  <motion.div
                     initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
                     className="w-full max-w-2xl"
                   >
@@ -418,5 +418,5 @@ export const Compliance = () => {
     </div>
   );
 };
-
+ 
 export default Compliance;

@@ -157,14 +157,14 @@ export function Home() {
               <div className="h-2 w-full bg-zinc-950 rounded-full overflow-hidden">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: "94%" }}
+                  animate={{ width: "85%" }}
                   transition={{ duration: 1.5, delay: 1 }}
                   className="h-full bg-amber-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]" 
                 />
               </div>
               <div className="flex justify-between mt-4">
                 <p className="text-[10px] text-zinc-400 font-bold">PRODUCTION EFFICIENCY</p>
-                <p className="text-[10px] text-white font-black">94.2%</p>
+                <p className="text-[10px] text-white font-black">85.2%</p>
               </div>
             </div>
 

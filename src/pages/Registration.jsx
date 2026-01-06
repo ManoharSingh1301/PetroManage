@@ -206,7 +206,7 @@ export function Registration({
                       role === "admin" ? "text-white" : "text-slate-500"
                     }`}
                   >
-                    Administrator
+                    Admin
                   </button>
                   <motion.div 
                     animate={{ x: role === "manager" ? "0%" : "100%" }}
