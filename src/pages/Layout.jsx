@@ -58,7 +58,7 @@ const dropdownVariants = {
 
 export function Layout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const location = useLocation(); // Used to trigger layout animations
+  const location = useLocation(); 
 
   const navItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Dashboard', path: '/dashboard' },

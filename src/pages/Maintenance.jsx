@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from 'framer-motion'; 
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wrench } from "lucide-react";
-
+ 
 // Local Component Imports
 import { CreateWorkOrderModal } from "../components/maintenance components/CreateWorkOrderModal";
 import { SummaryCard } from "../components/maintenance components/Summarycard";
 import { FilterBar } from "../components/maintenance components/FilterBar";
-
 // Constants
 const INITIAL_DATA = [
   { id: "WO-101", assetId: "Pipeline-P12", description: "Pressure inspection", type: "Preventive", priority: "High", date: "2025-09-12", technician: "Ravi Singh", status: "Scheduled" },
@@ -27,83 +26,79 @@ const INITIAL_DATA = [
   { id: "WO-116", assetId: "Storage-S2", description: "Ignition system repair", type: "Corrective", priority: "Medium", date: "2025-09-16", technician: "Meera Nair", status: "In Progress" },
   { id: "WO-111", assetId: "Rig-R9", description: "Ultrasonic thickness test", type: "Preventive", priority: "High", date: "2025-09-26", technician: "Sita Patel", status: "Scheduled" },
   { id: "WO-117", assetId: "Pipeline-P16", description: "Cathodic protection check", type: "Preventive", priority: "High", date: "2025-09-16", technician: "Ravi Singh", status: "In Progress" },
-  { id: "WO-118", assetId: "Pipeline-P03", description: "Motor rewinding", type: "Corrective", priority: "Low", date: "2025-09-17", technician: "Amit Sharma", status: "In Progress" },
   { id: "WO-119", assetId: "Rig-R12", description: "Gasket replacement", type: "Corrective", priority: "Medium", date: "2025-09-17", technician: "Sita Patel", status: "In Progress" },
   { id: "WO-120", assetId: "Storage-D04", description: "Fire suppression refill", type: "Preventive", priority: "Low", date: "2025-09-18", technician: "Rajesh Verma", status: "In Progress" },
   { id: "WO-104", assetId: "Pipeline-D05", description: "Pressure gauge calibration", type: "Preventive", priority: "Medium", date: "2025-09-11", technician: "Rajesh Verma", status: "Completed" },
   { id: "WO-103", assetId: "Storage-C02", description: "Tank leakage check", type: "Preventive", priority: "High", date: "2025-09-10", technician: "Sita Patel", status: "Overdue" },
   { id: "WO-123", assetId: "Pipeline-P99", description: "Emergency shut-off test", type: "Preventive", priority: "Medium", date: "2025-09-01", technician: "Vikram Seth", status: "Overdue" }
 ];
-
-const priorityColors = { 
-  Low: "bg-yellow-100 text-yellow-700", 
-  Medium: "bg-orange-100 text-orange-700", 
-  High: "bg-red-100 text-red-700" 
+ 
+const priorityColors = {
+  Low: "bg-yellow-100 text-yellow-700",
+  Medium: "bg-orange-100 text-orange-700",
+  High: "bg-red-100 text-red-700"
 };
-
-const statusColors = { 
-  Scheduled: "bg-blue-100 text-blue-700", 
-  "In Progress": "bg-yellow-100 text-yellow-700", 
-  Overdue: "bg-red-100 text-red-700", 
-  Completed: "bg-green-100 text-green-700" 
+ 
+const statusColors = {
+  Scheduled: "bg-blue-100 text-blue-700",
+  "In Progress": "bg-yellow-100 text-yellow-700",
+  Overdue: "bg-red-100 text-red-700",
+  Completed: "bg-green-100 text-green-700"
 };
-
+ 
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
+  visible: {opacity: 1,transition: { staggerChildren: 0.1 }}
 };
-
+ 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
   visible: { y: 0, opacity: 1 }
 };
-
+ 
 export const Maintenance = () => {
   const [workOrders, setWorkOrders] = useState(INITIAL_DATA);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const [filterStatus, setFilterStatus] = useState("All");
-  
+ 
   const [searchFilters, setSearchFilters] = useState({
     workId: '', assetType: '', type: '', priority: '', technician: ''
   });
-
+ 
   const handleAddWorkOrder = (newOrder) => {
     setWorkOrders((prev) => [newOrder, ...prev]);
   };
-
+ 
   const filteredOrders = workOrders.filter((order) => {
     const matchesStatus = filterStatus === "All" || order.status === filterStatus;
     const matchesId = order.id.toLowerCase().includes(searchFilters.workId.toLowerCase());
-    const matchesAsset = !searchFilters.assetType || order.assetId.toLowerCase().includes(searchFilters.assetType.toLowerCase());
+    const matchesAsset = !searchFilters.assetType || order.assetId.includes(searchFilters.assetType);
+    //using !searchFilters to allow empty filter values so that if any filter crashes it won't affect other filters
     const matchesType = !searchFilters.type || order.type === searchFilters.type;
     const matchesPriority = !searchFilters.priority || order.priority === searchFilters.priority;
     const matchesTech = !searchFilters.technician || order.technician === searchFilters.technician;
-
+ 
     return matchesStatus && matchesId && matchesAsset && matchesType && matchesPriority && matchesTech;
-  });
-
+});
   const stats = [
     { title: "All Work Orders", value: workOrders.length, type: "all", status: "All" },
-    { title: "Scheduled", value: workOrders.filter(o => o.status === "Scheduled").length, type: "scheduled", status: "Scheduled" },
-    { title: "In Progress", value: workOrders.filter(o => o.status === "In Progress").length, type: "progress", status: "In Progress" },
+    { title: "Scheduled", value: workOrders.filter(o => o.status === "Scheduled").length, type: "scheduled", status: "Scheduled" },//type here is used as a hook for css styling
+    { title: "In Progress", value: workOrders.filter(o => o.status === "In Progress").length, type: "progress", status: "In Progress" },//status holds the exact value that the filter is looking for
     { title: "Completed", value: workOrders.filter(o => o.status === "Completed").length, type: "completed", status: "Completed" },
     { title: "Overdue", value: workOrders.filter(o => o.status === "Overdue").length, type: "overdue", status: "Overdue" },
   ];
-
+ 
   return (
-    <motion.div 
+    <motion.div
       className="py-4 space-y-6"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       {/* 1. Header Area */}
-      <motion.div 
+      <motion.div
         variants={itemVariants}
         className="bg-gradient-to-br from-orange-600 via-orange-700 to-orange-900 p-8 rounded-xl shadow-md flex justify-between items-center mb-8"
       >
@@ -116,8 +111,8 @@ export const Maintenance = () => {
             Schedule and manage maintenance work orders
           </p>
         </div>
-        
-        <motion.button 
+        {/* create new order button */}
+        <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setShowModal(true)}
@@ -126,30 +121,30 @@ export const Maintenance = () => {
           <span>+</span> Create Work Order
         </motion.button>
       </motion.div>
-
+ 
       {/* 2. Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
         {stats.map((stat) => (
-          <motion.div 
-            key={stat.type} 
+          <motion.div
+            key={stat.type}
             variants={itemVariants}
             whileHover={{ y: -4 }}
           >
-            <SummaryCard 
-              title={stat.title} 
-              value={stat.value} 
-              type={stat.type} 
-              onClick={() => setFilterStatus(stat.status)} 
-              isActive={filterStatus === stat.status} 
+            <SummaryCard
+              title={stat.title}
+              value={stat.value}
+              type={stat.type}
+              onClick={() => setFilterStatus(stat.status)}
+              isActive={filterStatus === stat.status}
             />
           </motion.div>
         ))}
       </div>
-
+ 
       <motion.div variants={itemVariants}>
         <FilterBar onFilterChange={(data) => setSearchFilters(data)} />
       </motion.div>
-      
+     
       {/* 3. Table Section */}
       <motion.div variants={itemVariants} className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="w-full border-collapse">
@@ -169,9 +164,9 @@ export const Maintenance = () => {
           <tbody className="divide-y divide-gray-200">
             <AnimatePresence mode='popLayout'>
               {filteredOrders.map((wo) => (
-                <motion.tr 
+                <motion.tr
                   layout
-                  key={wo.id} 
+                  key={wo.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -182,22 +177,24 @@ export const Maintenance = () => {
                   <TableCell>{wo.description}</TableCell>
                   <TableCell>{wo.type}</TableCell>
                   <TableCell>
-                    <span className={`px-2 py-1 rounded text-xs font-bold ${priorityColors[wo.priority]}`}>{wo.priority}</span>
+                    <span className={`inline-block w-20 text-center py-1 rounded text-xs font-bold ${priorityColors[wo.priority]}`}>
+  {wo.priority}
+</span>
                   </TableCell>
                   <TableCell className="text-gray-600">{wo.date}</TableCell>
                   <TableCell className="text-gray-600">{wo.technician}</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded text-xs font-bold ${statusColors[wo.status]}`}>{wo.status}</span>
                   </TableCell>
-                  <TableCell> 
-                    <motion.button 
+                  <TableCell>
+                    <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => navigate("/maintenance/status", { state: { selectedOrder: wo } }) } 
+                      onClick={() => navigate("/maintenance/status", { state: { selectedOrder: wo } }) }
                       className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer"
-                    > 
-                      View Details 
-                    </motion.button> 
+                    >
+                      View Details
+                    </motion.button>
                   </TableCell>
                 </motion.tr>
               ))}
@@ -205,12 +202,12 @@ export const Maintenance = () => {
           </tbody>
         </table>
       </motion.div>
-
+ 
       {/* 4. Modal Overlay */}
       <AnimatePresence>
         {showModal && (
-          <CreateWorkOrderModal 
-            onClose={() => setShowModal(false)} 
+          <CreateWorkOrderModal
+            onClose={() => setShowModal(false)}
             onSave={handleAddWorkOrder}
           />
         )}
@@ -218,14 +215,14 @@ export const Maintenance = () => {
     </motion.div>
   );
 };
-
-// --- Helper Components (Restored) ---
+ 
+ 
 const TableHead = ({ children }) => (
   <th className="text-left px-4 py-3 text-xs font-bold text-gray-500 uppercase">
     {children}
   </th>
 );
-
+ 
 const TableCell = ({ children, className = "" }) => (
   <td className={`px-4 py-4 text-sm ${className}`}>
     {children}
